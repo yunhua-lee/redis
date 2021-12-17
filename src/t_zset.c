@@ -130,7 +130,7 @@ zskiplistNode *zslInsert(zskiplist *zsl, double score, robj *obj) {
      * scores, and the re-insertion of score and redis object should never
      * happen since the caller of zslInsert() should test in the hash table
      * if the element is already inside or not. */
-    level = zslRandomLevel();
+    level = zslRandomLevel(); //这里用随机数来生成level，既简单又高效，自然就形成了层数越高越稀疏的金字塔结构
     if (level > zsl->level) {
         for (i = zsl->level; i < level; i++) {
             rank[i] = 0;
@@ -990,7 +990,7 @@ unsigned char *zzlInsert(unsigned char *zl, robj *ele, double score) {
             zl = zzlInsertAt(zl,eptr,ele,score);
             break;
         } else if (s == score) {
-            /* Ensure lexicographical ordering for elements. */
+            /* Ensure lexicographical ordering for elements. score相同则字典排序 */
             if (zzlCompareElements(eptr,ele->ptr,sdslen(ele->ptr)) > 0) {
                 zl = zzlInsertAt(zl,eptr,ele,score);
                 break;

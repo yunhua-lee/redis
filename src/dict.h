@@ -46,6 +46,7 @@
 
 typedef struct dictEntry {
     void *key;
+    //注意这里用的是C语言的union特性存储不同的类型
     union {
         void *val;
         uint64_t u64;
@@ -69,12 +70,12 @@ typedef struct dictType {
 typedef struct dictht {
     dictEntry **table;
     unsigned long size;
-    unsigned long sizemask;
+    unsigned long sizemask; //总是等于size-1，用来和hash函数结合结算hash槽位
     unsigned long used;
 } dictht;
 
 typedef struct dict {
-    dictType *type;
+    dictType *type; //用来指定不同类型的处理函数，实现泛型
     void *privdata;
     dictht ht[2];
     long rehashidx; /* rehashing not in progress if rehashidx == -1 */

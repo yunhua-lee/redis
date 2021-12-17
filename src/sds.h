@@ -45,6 +45,8 @@ struct sdshdr {
 };
 
 static inline size_t sdslen(const sds s) {
+	//这里用sds-的原因是在sdsnewlen的时候，返回的是sds的buf指针，而sdsnewlen在分配的时候，是包含了sdshdr的结构体的
+	//为何sds是返回sdshdr的buf呢？因为这样就sds可以和C语言的字符串等价了，很多标准API可以直接用
     struct sdshdr *sh = (void*)(s-(sizeof(struct sdshdr)));
     return sh->len;
 }

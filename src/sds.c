@@ -52,8 +52,10 @@ sds sdsnewlen(const void *init, size_t initlen) {
     struct sdshdr *sh;
 
     if (init) {
+    	//传入一个初始化的字符串
         sh = zmalloc(sizeof(struct sdshdr)+initlen+1);
     } else {
+    	//zcalloc会调用calloc，将分配的内存初始化为0
         sh = zcalloc(sizeof(struct sdshdr)+initlen+1);
     }
     if (sh == NULL) return NULL;
@@ -103,7 +105,7 @@ void sdsfree(sds s) {
  * the output will be "6" as the string was modified but the logical length
  * remains 6 bytes. */
 void sdsupdatelen(sds s) {
-    struct sdshdr *sh = (void*) (s-(sizeof(struct sdshdr)));
+    struct sdshdr *sh = (void*) (s-(sizeof(struct sdshdr))); //这段代码可以写成宏，到处都用到了
     int reallen = strlen(s);
     sh->free += (sh->len-reallen);
     sh->len = reallen;
@@ -114,7 +116,7 @@ void sdsupdatelen(sds s) {
  * so that next append operations will not require allocations up to the
  * number of bytes previously available. */
 void sdsclear(sds s) {
-    struct sdshdr *sh = (void*) (s-(sizeof(struct sdshdr)));
+    struct sdshdr *sh = (void*) (s-(sizeof(struct sdshdr))); //这段代码可以写成宏，到处都用到了
     sh->free += sh->len;
     sh->len = 0;
     sh->buf[0] = '\0';

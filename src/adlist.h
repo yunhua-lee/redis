@@ -47,6 +47,7 @@ typedef struct listIter {
 typedef struct list {
     listNode *head;
     listNode *tail;
+    //通过函数指针来实现泛型功能
     void *(*dup)(void *ptr);
     void (*free)(void *ptr);
     int (*match)(void *ptr, void *key);
