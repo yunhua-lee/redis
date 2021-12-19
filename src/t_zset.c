@@ -124,7 +124,8 @@ zskiplistNode *zslInsert(zskiplist *zsl, double score, robj *obj) {
             (x->level[i].forward->score < score ||
                 (x->level[i].forward->score == score &&
                 compareStringObjects(x->level[i].forward->obj,obj) < 0))) {
-            rank[i] += x->level[i].span; //计算每一个层级的（被插入节点的）前一个节点跨度的和
+        	//计算每一个层级的（被插入节点的）前一个节点跨度的和，含义就是节点在有序列表中的排名rank
+            rank[i] += x->level[i].span;
             x = x->level[i].forward;
         }
         update[i] = x;
