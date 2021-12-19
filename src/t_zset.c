@@ -107,6 +107,9 @@ int zslRandomLevel(void) {
     return (level<ZSKIPLIST_MAXLEVEL) ? level : ZSKIPLIST_MAXLEVEL;
 }
 
+/**
+ * 插入skiplist节点
+ */
 zskiplistNode *zslInsert(zskiplist *zsl, double score, robj *obj) {
     zskiplistNode *update[ZSKIPLIST_MAXLEVEL], *x; //update是需要更新的节点，也就是插入节点的前1个节点
     unsigned int rank[ZSKIPLIST_MAXLEVEL]; //rank是遍历过程中经历的跨度的和，也就是计算排名rank的意思
