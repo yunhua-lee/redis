@@ -108,20 +108,23 @@ int zslRandomLevel(void) {
 }
 
 zskiplistNode *zslInsert(zskiplist *zsl, double score, robj *obj) {
-    zskiplistNode *update[ZSKIPLIST_MAXLEVEL], *x;
-    unsigned int rank[ZSKIPLIST_MAXLEVEL];
+    zskiplistNode *update[ZSKIPLIST_MAXLEVEL], *x; //update是需要更新的节点，也就是插入节点的前1个节点
+    unsigned int rank[ZSKIPLIST_MAXLEVEL]; //rank是遍历过程中经历的跨度的和，也就是计算排名rank的意思
     int i, level;
 
     redisAssert(!isnan(score));
     x = zsl->header;
     for (i = zsl->level-1; i >= 0; i--) {
         /* store rank that is crossed to reach the insert position */
+    	//这里的rank[i]=rank[i+1]，是因为遍历的时候是自顶向下遍历，
+    	//当前层的下一个节点不符合要求时，直接从当前层的节点往下一层，然后继续从这个节点往前遍历，这里就像动态规划一样的思想
+    	//而不需要每一层都从header开始遍历
         rank[i] = i == (zsl->level-1) ? 0 : rank[i+1];
         while (x->level[i].forward &&
             (x->level[i].forward->score < score ||
                 (x->level[i].forward->score == score &&
                 compareStringObjects(x->level[i].forward->obj,obj) < 0))) {
-            rank[i] += x->level[i].span;
+            rank[i] += x->level[i].span; //计算每一个层级的（被插入节点的）前一个节点跨度的和
             x = x->level[i].forward;
         }
         update[i] = x;

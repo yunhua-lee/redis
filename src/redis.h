@@ -605,6 +605,8 @@ typedef struct zskiplistNode {
     struct zskiplistNode *backward;
     struct zskiplistLevel {
         struct zskiplistNode *forward;
+        //跨度，指的是节点当前层级到下一个节点的跨度，跨度是用来计算节点排名的，比如说你的成绩在班上排第几
+        //因为skiplist是有序的，可以通过span来快速计算排名
         unsigned int span;
     } level[];
 } zskiplistNode;
